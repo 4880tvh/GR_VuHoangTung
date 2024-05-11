@@ -75,6 +75,34 @@ function CitizenScreen() {
   const handleAddFunction = () => {
     setModalOpen(true);
   };
+  const handleExcelFunction = () => {
+    request(
+      "get",
+      `/excel/download`,
+      (res) => {
+        console.log(res.data);
+        const blob = new Blob([res.data]);
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = "customer.xlsx";
+        document.body.appendChild(a);
+        a.click();
+        window.URL.revokeObjectURL(url);
+      }
+    ).then();
+  };
+  const handleExcelDownloadFunction = () => {
+    request(
+      "get",
+      `/citizens/download-excel`,
+      "success",
+      "error",
+      (res) => {
+        console.log(res);
+      }
+    ).then();
+  }
 
   const handleCloseModal = () => {
     setModalOpen(false);
@@ -192,6 +220,9 @@ function CitizenScreen() {
   return (
     <div>
       <AddButton props={"Thêm mới cư dân"} onClick={handleAddFunction} />
+      <a href=""></a>
+      <AddButton props={"Xuất file Excel"} onClick={handleExcelFunction} />
+      <AddButton props={"tải về File Excel"} onClick={handleExcelDownloadFunction} />
       <StandardTable
         title="Citizen List"
         columns={columns}
